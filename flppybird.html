@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="600"></canvas>
+<script>
+    var canvas = document.getElementById('canvas').getContext('2d');
+    var imgup = new Image();
+    var imgbg = new Image();
+    var imgdn = new Image();
+    var bird = new Image();
+    var imgdimian = new Image();
+    imgup.src = 'pipe.png';
+    imgbg.src = 'bg.png';
+    imgdn.src = 'pipe.png';
+    imgdimian.src = "ground.png";
+    var birdArr = ["0.png", "1.png", "2.png"];
+    var upPipeX = 400;
+    var bird_y = 350;
+    var i = 0;
+    var v1 = 1;
+    var v2;
+    var a = 20;
+    var s = 0;
+    var upPipeY = 200;
+    var dnPipeY = 150;
+    var str = "Game Over";
+    var score = 0;
+
+    //设置空格键
+    window.onkeydown = function (event) {
+        var e = event || window.event;
+        if (e.keyCode == 32) {
+            bird_y = bird_y - 50;
+        }
+    }
+
+    var timer = setInterval(function () {
+        upPipeX = upPipeX - 10;
+        i++;
+        i = i % 3;
+        v2 = v1 + a;
+        s = (v1 + v2) / 2;
+        //v2 = v1;//速度越来越快
+        bird_y = bird_y + s;
+        console.log(bird_y);
+        bird.src = birdArr[i];
+
+        if (upPipeX < -100) {
+            upPipeX = 400;
+            upPipeY = 50 + 200 * Math.random();
+            dnPipeY = 350 - upPipeY;
+        } else if (upPipeX == -60) {
+            score++;
+        }
+
+        canvas.drawImage(imgbg, 0, 0, 400, 600);
+        canvas.drawImage(imgdimian, 0, 500, 400, 200);
+        canvas.drawImage(bird, 50, bird_y, 40, 40);
+        canvas.drawImage(imgup, 150, 500, 150, 800, upPipeX, 0, 100, upPipeY);
+        canvas.drawImage(imgdn, 0, 450, 150, 800, upPipeX, upPipeY + 150, 100, dnPipeY);
+
+        if (score >= 1) {
+            canvas.font = "30px Accent";
+            canvas.fillText("score:" + score, 140, 80);
+        }
+        if (bird_y > 470 || bird_y < 0 || ((bird_y < upPipeY) && (upPipeX < 90)) && (upPipeX + 100 > 90) || ((bird_y + 35 > 150 + upPipeY) && (upPipeX < 90)) && (upPipeX + 100 > 90)) {
+            canvas.font = "45px Accent"
+            canvas.fillText(str, 90, 150);
+            clearInterval(timer);
+        }
+    }, 80);
+
+</script>
+</body>
+</html>
